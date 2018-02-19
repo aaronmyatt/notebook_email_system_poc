@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h1>Notebooks</h1>
+
+    {% for notebook in file_paths %}
+        <p>{{notebook}}</p>
+    {% endfor %}
+{% endblock content %}
