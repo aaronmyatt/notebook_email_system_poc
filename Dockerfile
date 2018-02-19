@@ -5,5 +5,5 @@ RUN pip install pipenv
 WORKDIR /code
 ADD Pipfile /code/
 ADD Pipfile.lock /code/
-RUN pipenv install
+RUN pipenv install --dev
 ADD . /code/
