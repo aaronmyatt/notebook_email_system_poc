@@ -1,0 +1,3 @@
+#!/bin/bash -xe
+
+pipenv run ./manage.py runserver_plus -v 3
