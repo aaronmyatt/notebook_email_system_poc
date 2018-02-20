@@ -1,3 +1,4 @@
+from more_itertools import ilen
 from mock import patch
 from . import views
 
@@ -16,7 +17,8 @@ class TestNotebooksListView:
         view = views.notebooks_list
         response = view(request)
         assert mock_render.called
-        assert len(mock_render.call_args[1]['context']['file_paths']) > 0
+        file_paths = mock_render.call_args[1]['context']['file_paths']
+        assert ilen(file_paths) > 0
 
 class TestNotebookToHtmlView:
 
