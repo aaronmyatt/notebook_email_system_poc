@@ -9,6 +9,7 @@ name = "pypi"
 
 django = "*"
 nbconvert = "*"
+more-itertools = "*"
 
 
 [dev-packages]
