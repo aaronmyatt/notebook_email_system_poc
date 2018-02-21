@@ -27,7 +27,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-DEV_ONLY_APPS = ['debug_toolbar', 'django_extensions']
+DEV_ONLY_APPS = ['debug_toolbar', 'django_extensions', 'django_seed']
 
 CUSTOM_APPS = ['login', 'notebooks']
 
