@@ -8,7 +8,12 @@ class UserActivity(models.Model):
         ('I', 'Inactive'),
     )
 
-    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(
+        get_user_model(), 
+        on_delete=models.DO_NOTHING,
+        related_name='activity',
+        related_query_name='activity'
+        )
     state = models.CharField(max_length = 1, choices=USER_STATES, default='A')
 
     @property
