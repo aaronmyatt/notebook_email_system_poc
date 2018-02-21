@@ -29,7 +29,7 @@ DJANGO_APPS = [
 
 DEV_ONLY_APPS = ['debug_toolbar', 'django_extensions', 'django_seed']
 
-CUSTOM_APPS = ['login', 'notebooks']
+CUSTOM_APPS = ['login', 'notebooks', 'emailer']
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS
 
