@@ -1,12 +1,14 @@
-from nbconvert import HTMLExporter
+import os
 from django.shortcuts import render
+from .utils import notebook_html
 from .decorators import notebook_paths
 
 @notebook_paths
 def notebooks_list(request, file_paths=[]):
+    file_names = map(os.path.basename, file_paths)
     return render(request,
                   template_name='notebook_list.html',
-                  context=dict(file_paths=file_paths))
+                  context=dict(file_paths=file_names))
 
 @notebook_paths
 def notebook2html(request, file_name='', file_paths=[]):

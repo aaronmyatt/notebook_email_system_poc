@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
-
 {% block content %}
     <h1>Notebooks</h1>
 
     {% for notebook in file_paths %}
-        <p>{{notebook}}</p>
+        <p>
+            <a href="{% url 'notebook2html' notebook %}">{{ notebook | capfirst }}</a>
+        </p>
     {% endfor %}
 {% endblock content %}
