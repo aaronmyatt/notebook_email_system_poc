@@ -1,7 +1,7 @@
 import os
 from django.shortcuts import render
 from .utils import notebook_html
-from .decorators import notebook_paths
+from .decorators import notebook_paths, validate_file_type
 
 @notebook_paths
 def notebooks_list(request, file_paths=[]):
@@ -10,6 +10,7 @@ def notebooks_list(request, file_paths=[]):
                   template_name='notebook_list.html',
                   context=dict(file_paths=file_names))
 
+@validate_file_type('.ipynb')
 @notebook_paths
 def notebook2html(request, file_name='', file_paths=[]):
     file_path, *_ = filter(lambda path: file_name in path, file_paths)

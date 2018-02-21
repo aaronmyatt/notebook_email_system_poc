@@ -25,7 +25,7 @@ class TestNotebookToHtmlView:
     def test_view_200(self, rf):
         request = rf.get('/notebooks/test_input.ipynb')
         view = views.notebook2html
-        response = view(request, 'test_input.ipynb')
+        response = view(request, file_name='test_input.ipynb')
         assert response.status_code == 200
 
     @patch('notebooks.views.render')
@@ -35,3 +35,9 @@ class TestNotebookToHtmlView:
         response = view(request, file_name='test_input.ipynb')
         assert mock_render.called
         assert '<!DOCTYPE html>\n<html>\n<head><meta charset="utf-8" />\n<title>test_input' in mock_render.call_args[1]['context']['notebook_html']
+
+    def test_view_only_accepts_notebook_files(self, rf):
+        request = rf.get('/notebooks/test_input.css')
+        view = views.notebook2html
+        response = view(request, file_name='test_input.css')
+        assert response.status_code == 403
