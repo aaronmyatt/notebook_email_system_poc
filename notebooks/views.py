@@ -11,6 +11,5 @@ def notebooks_list(request, file_paths=[]):
 @notebook_paths
 def notebook2html(request, file_name='', file_paths=[]):
     file_path, *_ = filter(lambda path: file_name in path, file_paths)
-    exporter = HTMLExporter()
-    html, meta = exporter.from_filename(file_path)
-    return render(request, template_name='notebook2html.html', context=dict(notebook_html=html))
+    with notebook_html(file_path) as html_output:
+        return render(request, template_name='notebook2html.html', context=dict(notebook_html=html_output))
