@@ -11,7 +11,6 @@ django = "*"
 nbconvert = "*"
 more-itertools = "*"
 
-
 [dev-packages]
 
 pylint = "*"
@@ -26,3 +25,4 @@ pytest-xdist = "*"
 mock = "*"
 pytest-pudb = "*"
 django-seed = "*"
+jupyter = "*"
