@@ -8,6 +8,6 @@ class EmailActivity(models.Model):
         related_name='emails',
         related_query_name='emails'
         )
-    last_email = models.DateField(auto_now=True)
+    last_email = models.DateField(auto_now_add=True)
 
 from .signals import *
