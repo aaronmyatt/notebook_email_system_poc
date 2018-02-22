@@ -8,7 +8,7 @@ class UserActivity(models.Model):
         ('I', 'Inactive'),
     )
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         get_user_model(), 
         on_delete=models.DO_NOTHING,
         related_name='activity',
