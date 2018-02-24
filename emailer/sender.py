@@ -4,11 +4,15 @@ import nbformat
 from IPython.core.interactiveshell import InteractiveShell
 from notebooks.decorators import notebook_paths
 
+def sender(users):
+    users = emailable_users(users)
+    send_emails(users)
+
 @notebook_paths
-def sender(users, file_paths=[]):
+def emailable_users(users, file_paths=[]):
     file_path, *_ = [path for path in file_paths if 'email_sender' in path]
     users = execute_notebook(file_path, globe = locals().copy(), param='users')
-    send_emails(users)
+    return users
 
 def send_emails(users):
     # email handler logic goes here

@@ -47,6 +47,14 @@ class TestDashboardView:
         response = view(request)
         assert response.status_code == 200
 
+    @patch('emailer.views.render')
+    def test_passes_list_emailable_users_to_dashboard(self, mock_render, django_user_model, rf, db):
+        make_users(django_user_model, state='A', last_email=YESTERDAY)
+        request = rf.get('/emailer/dashboard')
+        views.dashboard(request)
+        assert mock_render.called
+        assert len(mock_render.call_args[1]['context']['emailable_users']) > 0
+
 
 class TestUserModelSignal:
 

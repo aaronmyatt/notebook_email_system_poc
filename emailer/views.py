@@ -8,4 +8,5 @@ def trigger_email_sender(request):
     return HttpResponse()
 
 def dashboard(request):
-    return render(request, 'emailer_dashboard.html')
+    users = sender.emailable_users(get_user_model())
+    return render(request, 'emailer_dashboard.html', context=dict(emailable_users=users.all()))
