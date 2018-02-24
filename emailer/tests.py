@@ -5,8 +5,7 @@ from django.test import TestCase
 from django_seed import Seed
 from django.contrib.auth import get_user_model
 from login.models import UserActivity
-from . import models
-from . import sender
+from . import models, views, sender
 
 seeder = Seed.seeder()
 
@@ -23,6 +22,32 @@ def make_users(User, state='A', last_email=TODAY):
     u.activity.save()
     u.emails.last_email = last_email
     u.emails.save()
+
+
+class TestSenderView:
+
+    def test_view_200(self, rf, db):
+        request = rf.get('/emailer/send')
+        view = views.trigger_email_sender
+        response = view(request)
+        assert response.status_code == 200
+
+    def test_calls_sender(self, rf, db):
+        request = rf.get('/emailer/send')
+        with patch('emailer.sender.sender') as mock_sender:
+            views.trigger_email_sender(request)
+            assert mock_sender.called
+
+
+class TestDashboardView:
+
+    def test_view_200(self, rf, db):
+        request = rf.get('/emailer/dashboard')
+        view = views.dashboard
+        response = view(request)
+        assert response.status_code == 200
+
+
 class TestUserModelSignal:
 
     def test_email_activity_created_after_user(self, rf, db):
