@@ -1,17 +1,20 @@
+from datetime import date
 import io
 import nbformat
 from IPython.core.interactiveshell import InteractiveShell
 from notebooks.decorators import notebook_paths
 
 @notebook_paths
-def sender(users, file_paths):
+def sender(users, file_paths=[]):
     file_path, *_ = [path for path in file_paths if 'email_sender' in path]
     users = execute_notebook(file_path, globe = locals().copy(), param='users')
     send_emails(users)
 
 def send_emails(users):
     # email handler logic goes here
-    pass
+    for user in users.all():
+        user.emails.last_email = date.today()
+        user.emails.save()
 
 def execute_notebook(path, globe, param='users'):
     nb = load_notebook(path)

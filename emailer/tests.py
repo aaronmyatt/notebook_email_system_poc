@@ -13,18 +13,16 @@ seeder = Seed.seeder()
 TODAY = date.today()
 FOUR_DAYS_AGO = (date.today() - timedelta(4))
 TWO_DAYS_AGO = (date.today() - timedelta(2))
+YESTERDAY = (date.today() - timedelta(1))
 
 def make_users(User, state='A', last_email=TODAY):
     seeder.add_entity(User, 3)
     seeder.execute()
     u = User.objects.first()
-    s = u.activity.all()[0]
-    s.state = state
-    e = u.emails.all()[0]
-    e.last_email = last_email
-    s.save()
-    e.save()
-
+    u.activity.state = state
+    u.activity.save()
+    u.emails.last_email = last_email
+    u.emails.save()
 class TestUserModelSignal:
 
     def test_email_activity_created_after_user(self, rf, db):
@@ -47,9 +45,9 @@ class TestEmailSender:
             assert inactive_count == 0
 
 
-    @patch('emailer.sender.send_emails')
     class TestNonResponsiveUsers:
 
+        @patch('emailer.sender.send_emails')
         def test_gets_email_after_three_days(self, mock_sender, django_user_model, db):
             make_users(django_user_model, state='NR', last_email=FOUR_DAYS_AGO)
             sender.sender(django_user_model)
@@ -57,6 +55,7 @@ class TestEmailSender:
             nr_count = mock_sender.call_args[0][0].filter(activity__state='NR').count()
             assert nr_count == 1
 
+        @patch('emailer.sender.send_emails')
         def test_exluded_when_last_email_too_recent(self, mock_sender, django_user_model, db):
             make_users(django_user_model, state='NR', last_email=TWO_DAYS_AGO)
             sender.sender(django_user_model)
@@ -64,5 +63,25 @@ class TestEmailSender:
             nr_count = mock_sender.call_args[0][0].filter(activity__state='NR').count()
             assert nr_count == 0
 
+        def test_recieves_email_only_once_three_daily(self, django_user_model, db):
+            make_users(django_user_model, state='NR', last_email=FOUR_DAYS_AGO)
+            sender.sender(django_user_model)
+            user_count = django_user_model.objects.filter(emails__last_email__lt=TODAY).count()
+            assert user_count == 0
 
+    
+    class TestActiveUsers:
 
+        @patch('emailer.sender.send_emails')
+        def test_recieves_email_every_day(self, mock_sender, django_user_model, db):
+            make_users(django_user_model, state='A', last_email=YESTERDAY)
+            sender.sender(django_user_model)
+            assert mock_sender.called
+            inactive_count = mock_sender.call_args[0][0].filter(activity__state='A').count()
+            assert inactive_count == 1
+
+        def test_recieves_email_only_once_daily(self, django_user_model, db):
+            make_users(django_user_model, state='A', last_email=TODAY)
+            sender.sender(django_user_model)
+            user_count = django_user_model.objects.filter(emails__last_email__lt=TODAY).count()
+            assert user_count == 0
