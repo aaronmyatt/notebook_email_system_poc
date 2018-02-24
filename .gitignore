@@ -3,6 +3,6 @@ db.sqlite3
 *.pyc
 .cache
 __pycache__/
-static/
+/static/
 .pytest_cache/
 *checkpoint.ipynb
