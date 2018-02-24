@@ -10,4 +10,14 @@ class EmailActivity(models.Model):
         )
     last_email = models.DateField(auto_now_add=True)
 
+
+class EmailEvent(models.Model):
+    publisher = models.OneToOneField(
+        EmailActivity,
+        on_delete=models.DO_NOTHING,
+        related_name='event_publisher',
+        related_query_name='publisher'
+        )
+    trigger_time = models.DateTimeField(auto_now_add=True)
+
 from .signals import *

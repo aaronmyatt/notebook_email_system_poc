@@ -118,3 +118,15 @@ class TestEmailSender:
             sender.sender(django_user_model)
             user_count = django_user_model.objects.filter(emails__last_email__lt=TODAY).count()
             assert user_count == 0
+
+
+class TestEmailEvent:
+
+    def test_created_when_email_sent(self, django_user_model):
+        make_users(django_user_model, state='A', last_email=YESTERDAY)
+        sender.sender(django_user_model)
+        assert models.EmailEvent.objects.count() == 1
+
+    def test_no_events_on_user_creation(self, django_user_model):
+        seeder.add_entity(django_user_model, 1)
+        assert models.EmailEvent.objects.count() == 0
