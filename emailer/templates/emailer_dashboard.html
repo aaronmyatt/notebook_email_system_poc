@@ -3,3 +3,9 @@
 {% for user in emailable_users %}
     <p> {{ user }} </p>
 {% endfor %}
+
+<h1> Emails Recently Sent </h1>
+
+{% for event in email_events %}
+    <p> {{ event }} </p>
+{% endfor %}
