@@ -5,16 +5,10 @@ from IPython.core.interactiveshell import InteractiveShell
 from notebooks.decorators import notebook_paths
 
 @notebook_paths
-def updater(users, file_paths=[]):
+def updater(user_activity, file_paths=[]):
     file_path, *_ = [path for path in file_paths if 'user_updater' in path]
-    users = execute_notebook(file_path, globe = locals().copy(), param='users')
-    return users
-
-def send_emails(users):
-    # email handler logic goes here
-    for user in users.all():
-        user.emails.last_email = date.today()
-        user.emails.save()
+    user_update_count = execute_notebook(file_path, globe = locals().copy(), param='user_update_count')
+    return user_update_count
 
 def execute_notebook(path, globe, param='users'):
     nb = load_notebook(path)

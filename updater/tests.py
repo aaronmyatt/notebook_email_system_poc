@@ -1,20 +1,24 @@
-from datetime import date, timedelta
+from datetime import timedelta
 import pytest
 from mock import patch
-from django.test import TestCase
+from django.utils.timezone import now
 from django_seed import Seed
+from login.models import UserActivity
 from . import models, views, user_updater
 
 seeder = Seed.seeder()
 
-TODAY = date.today()
-FOUR_DAYS_AGO = (date.today() - timedelta(4))
-FIVE_DAYS_AGO = (date.today() - timedelta(5))
-TWO_DAYS_AGO = (date.today() - timedelta(2))
-YESTERDAY = (date.today() - timedelta(1))
+NOW = now()
+FIVE_DAYS_AGO = (NOW - timedelta(5))
+FOUR_DAYS_AGO = (NOW - timedelta(4))
+THREE_DAYS_AGO = (NOW - timedelta(3))
+TWO_DAYS_AGO = (NOW - timedelta(2))
+YESTERDAY = (NOW - timedelta(1))
 
-def make_users(User, state='A', last_login=TODAY):
-    seeder.add_entity(User, 3)
+def make_users(User, state='A', last_login=NOW):
+    seeder.add_entity(User, 3, {
+        'last_login': lambda x: NOW,
+    })
     seeder.execute()
     u = User.objects.first()
     u.last_login = last_login
@@ -77,9 +81,30 @@ class TestUserUpdater:
 
         def test_4day_old_login_set_to_nonresponsive(self, django_user_model, db):
             make_users(django_user_model, last_login=FIVE_DAYS_AGO)
-            user_updater.updater()
-            users = django_user_model.objects.filter(activity__state='NR')
-            assert len(users) == 1
+            user_updater.updater(UserActivity)
+            user_count = django_user_model.objects.filter(activity__state='NR').count()
+            assert user_count == 1
+
+        def test_recent_logins_ignored(self, django_user_model, db):
+            make_users(django_user_model, last_login=TWO_DAYS_AGO)
+            user_updater.updater(UserActivity)
+            user_count = django_user_model.objects.filter(activity__state='NR').count()
+            assert user_count == 0
+
+    class TestNonresponsiveUsers:
+
+        def test_3day_old_login_set_to_inactive(self, django_user_model, transactional_db):
+            make_users(django_user_model, state='NR', last_login=THREE_DAYS_AGO)
+            user_updater.updater(UserActivity)
+            user_count = django_user_model.objects.filter(activity__state='I').count()
+            assert user_count == 1
+
+        def test_recent_login_set_to_active(self, django_user_model, transactional_db):
+            make_users(django_user_model, state='NR', last_login=YESTERDAY)
+            user_updater.updater(UserActivity)
+            user_count = django_user_model.objects.filter(activity__state='A').count()
+            assert user_count == 3
+
 
 
 
