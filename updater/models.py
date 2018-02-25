@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 class UserUpdateEvent(models.Model):
-    publisher = models.OneToOneField(
+    publisher = models.ForeignKey(
         get_user_model(),
         on_delete=models.DO_NOTHING,
         related_name='event_publisher',
