@@ -1,0 +1,20 @@
+{% load static %}
+
+<button id="email_send_button">Send Emails</button>
+
+<h1> Users Pending an Email </h1>
+
+{% for user in emailable_users %}
+    <p> {{ user }} </p>
+{% endfor %}
+
+<h1> Emails Recently Sent </h1>
+
+{% for event in email_events %}
+    <p> {{ event }} </p>
+{% endfor %}
+
+
+{% block extra_js %}
+    <script src="{% static 'emailer/js/emailer_dashboard.js' %}" type="text/javascript"></script>
+{% endblock extra_js %}
