@@ -1,9 +1,14 @@
 {% load static %}
 
-<button id="email_send_button">Update Users</button>
+<button id="update_user_button">Update Users</button>
 
-<h1> User states recent changed </h1>
+<h1> User states recently changed </h1>
 
 {% for event in update_events %}
     <p> {{ event }} </p>
 {% endfor %}
+
+
+{% block extra_js %}
+    <script src="{% static 'updater/js/updater_dashboard.js' %}" type="text/javascript"></script>
+{% endblock extra_js %}
