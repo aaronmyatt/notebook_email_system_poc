@@ -1,11 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Notebooks</h1>
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">
+                Notebooks
+            </h1>
+            <h2 class="subtitle">
+                Business logic is written and executed via Jupyter Notebooks. This provides a radically flexible, highly communicative format for developing business logic with developers and stakeholders.
+            </h2>
+        </div>
+    </div>
+</section>
 
+<section>
     {% for notebook in file_paths %}
-        <p>
-            <a href="{% url 'notebook2html' notebook %}">{{ notebook | capfirst }}</a>
-        </p>
+        <div>
+            <a href="{% url 'notebook2html' notebook %}">
+                <div class="button is-large">
+                    {{ notebook | capfirst }}
+                </div>
+            </a>
+        </div>
     {% endfor %}
+</section>
 {% endblock content %}
