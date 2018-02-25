@@ -12,10 +12,34 @@
     {% endblock extra_css %}
   </head>
   <body>
-  <section class="section">
-    {% block content %}
-    {% endblock content %}
-  </section>
+    <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <span class="fa fa-envelope"></span>
+        </a>
+        <div class="navbar-burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <a class="navbar-item has-text-weight-bold" href="{% url 'login' %}" >
+          Login
+      </a>
+      <a class="navbar-item" href="{% url 'notebooks_list' %}" >
+          Notebooks
+      </a>
+      <a class="navbar-item" href="{% url 'emailer_dashboard' %}" >
+          Emailer
+      </a>
+      <a class="navbar-item" href="{% url 'updater_dashboard' %}" >
+          Updater
+      </a>
+    </nav>
+    <section class="section">
+      {% block content %}
+      {% endblock content %}
+    </section>
 
   {% block extra_js %}
   {% endblock extra_js %}
