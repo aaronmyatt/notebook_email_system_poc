@@ -38,9 +38,14 @@ class Command(BaseCommand):
         user = self.create_one_active_user()
         user.last_login = SIX_DAYS_AGO
         user.save()
+        user.activity.state = 'NR'
+        user.activity.save()
         return user
 
     def create_one_active_non_responsive_user(self):
         user = self.create_one_active_user()
         user.last_login = YESTERDAY
         user.save()
+        user.activity.state = 'NR'
+        user.activity.save()
+        return user
