@@ -95,7 +95,7 @@ class TestEmailEvent:
     def test_created_when_email_sent(self, django_user_model):
         make_users(django_user_model, state='A', last_login=FIVE_DAYS_AGO)
         user_updater.updater(UserActivity)
-        assert models.UserUpdateEvent.objects.count() == 1
+        assert models.UserUpdateEvent.objects.count() == 2
 
     def test_no_events_on_user_activity_creation(self, django_user_model):
         seeder.add_entity(UserActivity, 1)
