@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.auth import get_user_model
+from login.models import UserActivity
+from . import user_updater
 
 def trigger_updater(request):
+    user_updater.updater(UserActivity)
     return HttpResponse()
 
 def dashboard(request):
