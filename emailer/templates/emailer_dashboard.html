@@ -2,19 +2,83 @@
 {% load static %}
 
 {% block content %}
-    <button id="email_send_button">Send Emails</button>
 
-    <h1> Users Pending an Email </h1>
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+        <h1 class="title">
+            Emailer
+        </h1>
+        <h2 class="subtitle">
+            See users who are waiting to be sent an email in the next email cycle, and a subset of those who recently had an email sent to them.
+        </h2>
+        </div>
+    </div>
+</section>
 
-    {% for user in emailable_users %}
-        <p> {{ user }} </p>
-    {% endfor %}
+<div class="container columns">
+    <div class="column is-half">
+        <div class="card">
+            <div class="card-content">
+                <p class="title is-4">Emailer Manual Override</p>
+                <p class="subtitle is-6">Override the execution schedule and manually run the emailer</p>
+                <button class="button is-large" id="email_send_button">Send Emails</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <h1> Emails Recently Sent </h1>
+<div class="container columns">
+    <section class="section column">
+        <h1 class="is-size-4"> Users Pending an Email </h1>
 
-    {% for event in email_events %}
-        <p> {{ event }} </p>
-    {% endfor %}
+        <table class="table is-hoverable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Email</th>
+                        <th>State</th>
+                        <th>Last Email Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in emailable_users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.activity.state }}</td>
+                            <td>{{ user.emails.last_email }}</td>
+                        </tr>
+                    {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+    </section>
+        
+    <section class="section column">
+        <h1 class="is-size-4"> Emails Recently Sent </h1>
+        <table class="table is-hoverable">
+            <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Email</th>
+                        <th>Event Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in email_events %}
+                        <tr>
+                            <td>{{ event.id }}</td>
+                            <td>{{ event.publisher.user.email }}</td>
+                            <td>{{ event.trigger_time }}</td>
+                        </tr>
+                    {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+    </section>
+</div>
+    
 {% endblock content %}
 
 {% block extra_js %}
