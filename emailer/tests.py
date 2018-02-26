@@ -25,40 +25,35 @@ def make_users(User, state='A', last_email=TODAY):
 
 
 class TestSenderView:
-
-    def test_view_200(self, rf, db):
-        request = rf.get('/emailer/send')
-        view = views.trigger_email_sender
-        response = view(request)
+    def test_view_200(self, admin_client):
+        response = admin_client.get('/emailer/send')
         assert response.status_code == 200
-
-    def test_calls_sender(self, rf, db):
-        request = rf.get('/emailer/send')
+    def test_calls_sender(self, admin_client):
         with patch('emailer.sender.sender') as mock_sender:
-            views.trigger_email_sender(request)
+            admin_client.get('/emailer/send')
             assert mock_sender.called
 
 
 class TestDashboardView:
 
-    def test_view_200(self, rf, db):
-        request = rf.get('/emailer/dashboard')
-        view = views.dashboard
-        response = view(request)
+    def test_view_200(self, admin_client):
+        response = admin_client.get('/emailer/dashboard')
         assert response.status_code == 200
 
     @patch('emailer.views.render')
-    def test_passes_list_emailable_users(self, mock_render, django_user_model, rf, db):
+    def test_passes_list_emailable_users(self, mock_render, django_user_model, rf, db, admin_user):
         make_users(django_user_model, state='A', last_email=YESTERDAY)
         request = rf.get('/emailer/dashboard')
+        request.user = admin_user
         views.dashboard(request)
         assert mock_render.called
         assert len(mock_render.call_args[1]['context']['emailable_users']) > 0
 
     @patch('emailer.views.render')
-    def test_passes_list_of_recent_email_events(self, mock_render, django_user_model, rf, db):
+    def test_passes_list_of_recent_email_events(self, mock_render, django_user_model, rf, db, admin_user):
         make_users(django_user_model, state='A', last_email=YESTERDAY)
         request = rf.get('/emailer/dashboard')
+        request.user = admin_user
         views.dashboard(request)
         assert mock_render.called
         assert len(mock_render.call_args[1]['context']['email_events']) > 0

@@ -29,14 +29,15 @@ def make_users(User, state='A', last_login=NOW):
 
 class TestUpdaterView:
 
-    def test_view_200(self, rf, db):
+    def test_view_200(self, rf, db, admin_user):
         request = rf.get('/updater/update')
-        view = views.trigger_updater
-        response = view(request)
+        request.user = admin_user
+        response = views.trigger_updater(request)
         assert response.status_code == 200
 
-    def test_calls_updater(self, rf, db):
+    def test_calls_updater(self, rf, db, admin_user):
         request = rf.get('/updater/update')
+        request.user = admin_user
         with patch('updater.user_updater.updater') as mock_updater:
             views.trigger_updater(request)
             assert mock_updater.called
@@ -44,16 +45,17 @@ class TestUpdaterView:
 
 class TestDashboardView:
 
-    def test_view_200(self, rf, db):
+    def test_view_200(self, rf, db, admin_user):
         request = rf.get('/updater/dashboard')
-        view = views.dashboard
-        response = view(request)
+        request.user = admin_user
+        response = views.dashboard(request)
         assert response.status_code == 200
 
     @patch('updater.views.render')
-    def test_passes_list_of_recent_update_events(self, mock_render, django_user_model, rf, db):
+    def test_passes_list_of_recent_update_events(self, mock_render, django_user_model, rf, db, admin_user):
         make_users(django_user_model, state='A', last_login=FIVE_DAYS_AGO)
         request = rf.get('/updater/dashboard')
+        request.user = admin_user
         views.dashboard(request)
         assert mock_render.called
         assert len(mock_render.call_args[1]['context']['update_events']) > 0
