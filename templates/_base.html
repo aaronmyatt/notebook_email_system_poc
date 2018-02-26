@@ -14,27 +14,26 @@
   <body>
     <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <span class="fa fa-envelope"></span>
-        </a>
+          <a class="navbar-item" href="{% url 'login' %}">
+            <span class="fa fa-envelope"></span>  Email System
+          </a> 
         <div class="navbar-burger">
           <span></span>
           <span></span>
           <span></span>
         </div>
       </div>
-      <a class="navbar-item has-text-weight-bold" href="{% url 'login' %}" >
-          Login
-      </a>
-      <a class="navbar-item" href="{% url 'notebooks_list' %}" >
-          Notebooks
-      </a>
-      <a class="navbar-item" href="{% url 'emailer_dashboard' %}" >
-          Emailer
-      </a>
-      <a class="navbar-item" href="{% url 'updater_dashboard' %}" >
-          Updater
-      </a>
+      {% if user.is_authenticated %}
+        <a class="navbar-item" href="{% url 'notebooks_list' %}" >
+            Notebooks
+        </a>
+        <a class="navbar-item" href="{% url 'emailer_dashboard' %}" >
+            Emailer
+        </a>
+        <a class="navbar-item" href="{% url 'updater_dashboard' %}" >
+            Updater
+        </a>
+      {% endif %}
     </nav>
     <section class="section">
       {% block content %}
