@@ -120,5 +120,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+LOGIN_REDIRECT_URL = '/notebooks/'
+
 if DEBUG:
     INTERNAL_IPS = ['localhost', '127.0.0.1', '0.0.0.0']
