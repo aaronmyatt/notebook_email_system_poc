@@ -2,13 +2,57 @@
 {% load static %}
 
 {% block content %}
-    <button id="update_user_button">Update Users</button>
 
-    <h1> User states recently changed </h1>
+<section class="hero">
+        <div class="hero-body">
+            <div class="container">
+            <h1 class="title">
+                Updater
+            </h1>
+            <h2 class="subtitle">
+                See users whose state has been recently updated.
+            </h2>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container columns">
+        <div class="column">
+            <div class="card">
+                <div class="card-content">
+                    <p class="title is-4">Updater Manual Override</p>
+                    <p class="subtitle is-6">Override the execution schedule and manually run the updater</p>
+                    <button class="button is-large" id="update_user_button">Update Users</button>
+                </div>
+            </div>
+        </div>
 
-    {% for event in update_events %}
-        <p> {{ event.publisher.id }} | {{ event.publisher.email }} | {{ event.snapshot }}</p>
-    {% endfor %}
+        <div class="column">
+                <h1 class="title is-4"> User states recently changed </h1>
+                <table class="table is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>User Email</th>
+                                <th>User Model Snapshot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in update_events %}
+                                <tr>
+                                    <td>{{ event.publisher.id }}</td>
+                                    <td>{{ event.publisher.email }}</td>
+                                    <td>{{ event.snapshot }}</td>
+                                </tr>
+                            {% endfor %}
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+        </div>
+
+
+    </div>
+
 {% endblock content %}
 
 {% block extra_js %}
