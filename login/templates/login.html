@@ -1,20 +1,46 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% load custom_tags %} {% block content %}
+<section class="box container">
+        
+    {% if form.non_field_errors %}
+        <article class="message is-danger">
+            <div class="message-header">
+                <p>Login Error</p>
+            </div>
+            <div class="message-body">
+                    {{ form.non_field_errors }}
+            </div>
+        </article>
+    {% endif %}
 
-{% block content %}
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
 
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+        <div class="field">
+            <label class="label">{{ form.username.label_tag }}</label>
+            <div class="control has-icons-left">
+                {{ form.username | addclass:'input' }}
+                <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                </span>
+            </div>
+            <p class="help is-danger">{{ form.username.errors }}</p>
+        </div>
+
+        <div class="field">
+            <label class="label">{{ form.password.label_tag }}</label>
+            <div class="control has-icons-left">
+                {{ form.password | addclass:'input' }}
+                <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </div>
+        </div>
+
+        <div class="control">
+            <button class="button is-primary" type="submit">Login</button>
+        </div>
+        <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+
+</section>
 {% endblock content %}
