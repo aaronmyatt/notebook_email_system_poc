@@ -24,6 +24,7 @@ Example Notebook Logic:
 0. `cd {{ MVETL repo path }}`
 1. `pipenv install --dev`
 2. `pipenv run ./manage.py migrate`
+3. `pipenv run ./manage.py createsuperuser`
 
 ## Development
 
